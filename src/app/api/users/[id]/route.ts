@@ -5,12 +5,15 @@ import { getDataFromToken } from "@/helpers/getDataFormUser";
 
 connect();
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> } // 👈 params is async
+) {
   try {
     // ✅ Require login
     await getDataFromToken(request);
 
-    const { id } = params; // ✅ get user ID from URL
+    const { id } = await context.params; // 👈 await is required
     const user = await User.findById(id).select("-password");
 
     if (!user) {
