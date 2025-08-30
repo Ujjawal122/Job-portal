@@ -28,3 +28,31 @@ export async function GET(
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
+
+
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> } // 👈 make params async
+) {
+  try {
+    const tokenData = await getDataFromToken(request)
+
+    // ✅ Must await params
+    const { id } = await context.params
+
+    // 🔒 Only allow editing own profile
+    if (tokenData.id !== id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    const body = await request.json()
+
+    // Example update (uncomment & replace with real logic):
+    // await User.findByIdAndUpdate(id, body, { new: true })
+
+    return NextResponse.json({ success: true }, { status: 200 })
+  } catch (error) {
+    console.error("Error updating user:", error)
+    return NextResponse.json({ error: "Server error" }, { status: 500 })
+  }
+}
