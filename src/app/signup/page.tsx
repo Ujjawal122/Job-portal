@@ -78,7 +78,7 @@ export default function SignupPage(){
               <div className="flex items-center">
                 <Label htmlFor="password">Username</Label>
                
-              </div>
+            </div>
               <Input id="Username" type="username" required
                 value={user.username}
                 onChange={(e)=>setUser({...user,username:e.target.value})}
